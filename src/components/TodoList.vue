@@ -4,12 +4,14 @@ import { useTodoStore } from '../store/todoStore';
 import '../components/TodoList.css'
 import EditModal from './EditModal.vue'
 import DeleteModal from './DeleteModal.vue'
+import RemoveAllModal from './RemoveAllModal.vue'
 
 const store = useTodoStore();
 const filter = ref('all')
 const priorityFilter = ref('all')
 const editingTodo = ref(null);
 const deleteId = ref(null)
+const showRemoveAllModal = ref(false)
 
 const filteredTodos = computed(() => {
   let todos = store.todos
@@ -52,7 +54,7 @@ function toggleComplete(id) {
         <option value="low">Low</option>
       </select>
       <div>
-        <button class="remove-btn" @click="store.removeAll">Remove All</button>
+        <button class="remove-btn" @click="showRemoveAllModal = true">Remove All</button>
       </div>
     </div>
 
@@ -89,5 +91,8 @@ function toggleComplete(id) {
     <EditModal v-if="editingTodo" :todo="editingTodo" :onClose="() => editingTodo = null" />
     <DeleteModal v-if="deleteId" :onConfirm="() => { store.deleteTodo(deleteId); deleteId = null; }"
       :onCancel="() => deleteId = null" />
+    <RemoveAllModal v-if="showRemoveAllModal" :onConfirm="() => { store.removeAll(); showRemoveAllModal = false; }"
+      :onCancel="() => showRemoveAllModal = false" />
+
   </div>
 </template>
